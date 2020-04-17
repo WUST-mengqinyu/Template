@@ -1,0 +1,42 @@
+\paragraph{问题}
+设 $f(i) = \min(y[k] - s[i] \times x[k]), k \in [1,i-1]$, 现在要求出所有$f(i), i \in [1,n]$
+
+考虑两个决策$j$和$k$，如果$j$比$k$优，则
+
+$$y[j] - s[i] \times x[j] < y[k] - s[i] \times x[k]$$
+
+化简得:
+
+$$\frac{y_j - y_k}{x_j - x_k} < s_i$$
+
+不等式左边是个斜率，我们把它设为$\text{slope}(j,k)$
+
+我们可以维护一个单调递增的队列，为什么呢？
+
+因为如果$\text{slope}(q[i-1],q[i]) > \text{slope}(q[i],q[i+1])$，那么当前者成立时，后者必定成立。 即$q[i]$决策优于$q[i-1]$决策时，$q[i+1]$必然优于$q[i]$，因此$q[i]$就没有存在的必要了。 所以我们要维护递增的队列。
+
+那么每次的决策点$i$，都要满足
+$$\begin{cases}
+    \text{slope}(q[i-1],q[i]) < s[i] \\
+    \text{slope}(q[i],q[i+1]) \ge s[i]
+\end{cases}$$
+
+一般情况去二分这个$i$即可。
+
+如果$s[i]$是单调不降的，那么对于决策$j$和$k$($j < k$)来说，如果决策$k$优于决策$j$，那么对于$i \in [k+1,n]$，都存在决策$k$优于决策$j$， 因此决策$j$就可以舍弃了。 这样的话我们可以用单调队列进行优化，可以少个$\log$。
+
+\paragraph{单调队列滑动窗口最大值}
+\begin{lstlisting}
+// k为滑动窗口的大小，数列下标从1开始，d为序列长度+1
+deque<int> q;
+for (int i = 0, j = 0; i + k <= d; i++)
+{
+    while (j < i + k)
+    {
+        while (!q.empty() && a[q.back()] < a[j]) q.pop_back();
+        q.push_back(j++);
+    }
+    while (q.front() < i) q.pop_front();
+    // a[q.front()]为当前滑动窗口的最大值
+}
+\end{lstlisting}

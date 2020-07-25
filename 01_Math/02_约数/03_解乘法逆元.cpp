@@ -10,15 +10,9 @@ void exgcd(ll a, ll b, ll c, ll d, ll &x, ll &y) {
     x += (z - 1) * y;
 }
 
-int main(int argc, char* argv[]) {
-    int T;
-    scanf("%d", &T);
-    ll p, x;
-    for (int kase = 1; kase <= T; ++kase) {
-        scanf("%lld%lld", &p, &x);
-        ll b, y;
-        exgcd(p, x, p, x - 1, b, y);
-        printf("%lld/%lld\n", b * x - p * y, b);
-    }
-    return 0;
+// 求 a/b mod p = x mod p，优先 b 小
+pair<ll, ll> invInv(ll p, ll x) {
+    ll b, y;
+    exgcd(p, x, p, x - 1, b, y);
+    return {b * x - p * y, b};
 }

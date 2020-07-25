@@ -32,7 +32,7 @@ const ll mod = 1e9+7;
 const int maxn = $MAXN$;
 const int inf = 0x3f3f3f3f;
 
-ll qp(ll x, ll n) {
+ll qp(ll x, ll n, ll mod = ::mod) {
     ll res = 1; x %= mod;
     while (n > 0) {
         if (n & 1) res = res * x % mod;

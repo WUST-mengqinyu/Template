@@ -1,50 +1,61 @@
-const int maxn = 1e7 + 10;
-const double Pi = acos(-1.0);
-
-struct complex
-{
-	double x, y;
-	complex (double xx = 0, double yy = 0) { x = xx, y = yy; }
-}a[maxn], b[maxn];
-
-complex operator + (complex a, complex b) { return complex(a.x + b.x, a.y + b.y); }
-complex operator - (complex a, complex b) { return complex(a.x - b.x, a.y - b.y); }
-complex operator * (complex a, complex b) { return complex(a.x * b.x - a.y * b.y, a.x * b.y + a.y * b.x); }
-
-int n, m;
-int l, r[maxn];
-int limit;
-
-void FFT(complex *A, int type)
-{
-	for(int i = 0; i < limit; i ++)
-		if(i < r[i]) swap(A[i], A[r[i]]);
-	for(int mid = 1; mid < limit; mid <<= 1)
-	{
-		complex Wn(cos(Pi / mid), type * sin(Pi / mid));
-		for(int R = mid << 1, j = 0; j < limit; j += R)
-		{
-			complex w(1, 0);
-			for(int k = 0; k < mid; k ++, w = w * Wn)
-			{
-				complex x = A[j + k], y = w * A[j + mid + k];
-				A[j + k] = x + y;
-				A[j + mid + k] = x - y;
-			}
-		}
-	}
+// maxn 至少是大于m+n的2次方数
+// m,n 1e5 maxn (1<<18)+50
+// m,n 2e5 maxn (1<<19)+50
+// m,n 1e6 maxn (1<<21)+50
+#define ld double
+const ld PI = acosl(-1);
+struct cplx {
+    ld a, b;
+    cplx(ld a = 0, ld b = 0) : a(a), b(b) {}
+    const cplx operator+(const cplx &c) const { return cplx(a + c.a, b + c.b); }
+    const cplx operator-(const cplx &c) const { return cplx(a - c.a, b - c.b); }
+    const cplx operator*(const cplx &c) const { return cplx(a * c.a - b * c.b, a * c.b + b * c.a); }
+    const cplx operator/(const ld &x) const { return cplx(a / x, b / x); }
+    const cplx conj() const { return cplx(a, -b); }
+};
+int rev[maxn];
+cplx w[maxn];
+cplx f[maxn];
+void prepare(int &n) {
+    int sz = __builtin_ctz(n);
+    for (int i = 1; i < n; ++i) rev[i] = (rev[i >> 1] >> 1) | ((i & 1) << (sz - 1));
+    w[0] = 0, w[1] = 1, sz = 1;
+    while (1 << sz < n) {
+        cplx w_n = cplx(cosl(2 * PI / (1 << (sz + 1))), sinl(2 * PI / (1 << (sz + 1))));
+        for (int i = 1 << (sz - 1); i < (1 << sz); ++i) {
+            w[i << 1] = w[i], w[i << 1 | 1] = w[i] * w_n;
+        }
+        ++sz;
+    }
 }
-
-void mul()
-{
-	l = 0, limit = 1;
-	while(limit <= n + m) limit <<= 1, l ++;
-	for(int i = 0; i < limit; i ++)
-		r[i] = (r[i >> 1] >> 1) | ( (i & 1) << (l - 1));
-	FFT(a, 1);
-	FFT(b, 1);
-	for(int i = 0; i <= limit; i ++) a[i] = a[i] * b[i];
-	FFT(a, -1);
-	for(int i = 0; i <= n + m; i ++)
-		printf("%d ", (int)(a[i].x / limit + 0.5));
+void fft(cplx *a, int n) {
+    for (int i = 1; i < n - 1; ++i) if (i < rev[i]) swap(a[i], a[rev[i]]);
+    for (int h = 1; h < n; h <<= 1) {
+        for (int s = 0; s < n; s += h << 1) {
+            for (int i = 0; i < h; ++i) {
+                cplx &u = a[s + i], &v = a[s + i + h], t = v * w[h + i];
+                v = u - t, u = u + t;
+            }
+        }
+    }
 }
+template<class T>
+vector<T> multiply(const vector<T> &a, const vector<T> &b) {
+    int n = a.size(), m = b.size(), sz = 1;
+    while (sz < n + m - 1) sz <<= 1;
+    prepare(sz);
+    for (int i = 0; i < sz; ++i) f[i] = cplx(i < n ? a[i] : 0, i < m ? b[i] : 0);
+    fft(f, sz);
+    for (int i = 0; i <= (sz >> 1); ++i) {
+        int j = (sz - i) & (sz - 1);
+        cplx x = (f[i] * f[i] - (f[j] * f[j]).conj()) * cplx(0, -0.25);
+        f[j] = x, f[i] = x.conj();
+    }
+    fft(f, sz);
+    vector<T> c(n + m - 1);
+    for (int i = 0; i < n + m - 1; ++i) {
+        c[i] = ((T) (f[i].a / sz + 0.3));
+    }
+    return c;
+}
+#undef ld

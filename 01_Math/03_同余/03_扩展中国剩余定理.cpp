@@ -5,6 +5,7 @@ ll exgcd(ll a, ll b, ll &x, ll &y) {
     return d;
 }
 
+// x % m[i] = a[i]
 ll excrt(const vector<ll> &m, const vector<ll> &a) {
     ll M = m[0], R = a[0];
     int n = a.size();

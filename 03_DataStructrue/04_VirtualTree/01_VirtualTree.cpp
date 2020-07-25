@@ -1,15 +1,19 @@
 const int pow2 = 19;
-const int maxn = 1 << pow2;
+int n;
 vector<int> adj0[maxn], adj1[maxn];
 int st[maxn << 1][pow2 + 1], dep[maxn], euler[maxn], euler_clock;
-// fa0 是原树的父节点
-// fa1 是虚树的父节点
-// len 是虚树每个节点的权重，每个节点代表原树的几个节点，也是虚树到它父节点的链的长度
-int stk[maxn], fa0[maxn], fa1[maxn], len[maxn];
-ll val[maxn];
-
+int stk[maxn], fa0[maxn];
+vector<int> cache;
 void link0(int u, int v) { adj0[u].emplace_back(v); adj0[v].emplace_back(u); }
-void link1(int u, int v) { adj1[u].emplace_back(v); adj1[v].emplace_back(u); }
+void link1(int u, int v) { adj1[u].emplace_back(v), cache.push_back(u); }
+void clearAll() {
+    for (int i = 1; i <= n; ++i) {
+        adj0[i].clear();
+        adj1[i].clear();
+    }
+    euler_clock = 0;
+}
+void clearVT() { for (auto i : cache) adj1[i].clear(); cache.clear(); }
 void dfs0(int u, int p) {
     fa0[u] = p;
     dep[u] = dep[p] + 1;
@@ -35,11 +39,12 @@ inline int lca(int u, int v) {
     int temp = 31 - __builtin_clz(++v - u);
     return upper(st[u][temp], st[v - (1 << temp)][temp]);
 }
+// build 后 stk[1] 是该树的根节点，且为有根树
 void build(vector<int>& key) {
     sort(key.begin(), key.end(), [&] (int u, int v) { return euler[u] < euler[v]; });
-    key.resize(unique(key.begin(), key.end()) - key.begin());
+    key.erase(unique(key.begin(), key.end()), key.end());
     int top = 0;
-    for (const auto& u : key) {
+    for (auto u : key) {
         if (!top) {
             stk[++top] = u;
             continue;
@@ -62,36 +67,39 @@ void build(vector<int>& key) {
     }
 }
 
-void dfs1(int u, int p) {
+int f[maxn];
+int res;
+int vis[maxn];
+void dfs1(int u) {
     fa1[u] = p;
-    val[u] = 0;
     len[u] = dep[u] - dep[p];
-    for (const auto& v : adj1[u]) if (v != p) dfs1(v, u);
+    for (auto v : adj1[u]) {
+        dfs1(v);
+    }
 }
 
-int main() {
-    // 多组清空操作
-    for (int i = 1; i <= n; ++i) {
-        adj0[i].clear();
-        adj1[i].clear();
+int main(int argc, char* argv[]) {
+    scanf("%d", &n);
+    for (int i = 1, u, v; i < n; ++i) {
+        scanf("%d%d", &u, &v);
+        link0(u, v);
     }
-    euler_clock = 0;
-
-    // 读入原树 link0 加边
-    // 读入处理关键节点存入vector key，包含1和链的端点和他们的lca的父节点（lca如果为1就不加）。
     dfs0(1, 0);
     lca_init();
-
-    vector<int> key(1, 1);
-    for (auto& q : query) {
-        cin >> q.u >> q.v;
-        key.emplace_back(q.u);
-        key.emplace_back(q.v);
-        int p = lca(q.u, q.v);
-        if (p != 1) key.emplace_back(fa0[p]);
+    int m; scanf("%d", &m);
+    for (int i = 0; i < m; ++i) {
+        int sz; scanf("%d", &sz);
+        vector<int> key(sz);
+        for (int j = 0; j < sz; ++j) {
+            scanf("%d", &key[j]);
+            vis[key[j]] = 1;
+        }
+        build(key);
+        res = 0;
+        dfs1(stk[1]);
+        printf("%d\n", res);
+        for (int j = 0; j < sz; ++j) vis[key[j]] = 0;
+        clearVT();
     }
-
-    build(key);
-    dfs1(1, 0);
     return 0;
 }

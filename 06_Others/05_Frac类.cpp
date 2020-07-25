@@ -14,12 +14,12 @@ struct Frac {
         b = b_;
         getJian();
     }
-    Frac add(const Frac& oth) {
+    Frac operator + (const Frac& oth) {
         ll bt = b * oth.b;
         ll at = a * oth.b + oth.a * b;
         return Frac(at, bt);
     }
-    Frac multi(const Frac& oth) {
+    Frac operator * (const Frac& oth) {
         a *= oth.a;
         b *= oth.b;
         getJian();

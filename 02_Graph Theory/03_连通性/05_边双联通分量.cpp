@@ -22,3 +22,32 @@ void dfs(int u, int pre)
 		else if(dfn[v] < dfn[u]) low[u] = min(low[u], dfn[v]);
 	}
 }
+
+int n, m;
+vector<int> edge[maxn];
+int dfn[maxn], low[maxn], idx;
+int st[maxn], stsz;
+// 标号特性：子节点标号大于父节点
+int inWhichGroup[maxn], groupNow, groupRt[maxn];
+int fa[maxn];
+
+void dfs(int u, int fa) {
+    ::fa[u] = fa;
+    dfn[u] = low[u] = ++idx, st[++stsz] = u;
+    int firstToVisFa = 1;
+    for (auto v : edge[u]) {
+        if (v != fa || !firstToVisFa) {
+            if (!dfn[v]) {
+                dfs(v, u);
+                low[u] = min(low[u], low[v]);
+            } else low[u] = min(low[u], dfn[v]);
+        } else firstToVisFa = 0;
+    }
+    if (dfn[u] == low[u]) {
+        ++groupNow;
+        groupRt[groupNow] = u;
+        do {
+            inWhichGroup[st[stsz]] = groupNow;
+        } while (st[stsz --] != u);
+    }
+}

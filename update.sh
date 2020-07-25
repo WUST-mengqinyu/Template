@@ -2,5 +2,5 @@
 git pull
 git add .
 timenow=$(date)
-git commit -m '${timenow}'
+git commit -m "${timenow}"
 git push

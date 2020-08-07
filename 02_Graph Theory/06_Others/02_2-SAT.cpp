@@ -21,7 +21,7 @@ namespace twosat {
     void init(int _n) {
         n = _n;
         cnt = scc_cnt = 0;
-        for (int i = 0; i <= n; ++i) {
+        for (int i = 0; i <= n * 2; ++i) {
             dfn[i] = 0;
             g[i].clear();
         }

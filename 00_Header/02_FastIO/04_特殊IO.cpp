@@ -25,14 +25,15 @@ void print(ll x, ll y, int need) { // need 表示小数位数
 // int 10
 // int64 19
 // int128 38
-template<class T, int g = 10, int mx = 19>
+template<class T, int g = 10>
 void print(T x) {
     vector<char> a(38);
+    if (x < 0) {x = -x;putchar('-');}
+    if (x == 0) {putchar('0');return;}
     int tot = 0;
     while (x > 0) {
         a[tot++] = x % g;
         x /= 10;
     }
     for (int i = tot - 1; i >= 0; --i) putchar('0' + a[i]);
-    putchar('\n');
 }

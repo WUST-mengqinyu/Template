@@ -49,7 +49,7 @@ inline void AND(int a, int b, int c)
 inline void OR(int a, int b, int c)
 {
     if(c == 0) add(a + n, a), add(b + n, b);
-    else add(a, b + n), add(b, a + n);
+    else add(a + n, b), add(b + n, a);
 }
 
 inline void XOR(int a, int b, int c)

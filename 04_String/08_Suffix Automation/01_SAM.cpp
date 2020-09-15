@@ -11,13 +11,14 @@ struct SuffixAutomation
 	    last = cnt = 1;
 	    memset(ch[1], 0, sizeof ch[1]);
 	    fa[1] = len[1] = 0;
+        a[1] = c[1] = 0;
     }
 
     int inline newnode(int idx)
     {
         ++cnt;
         memset(ch[cnt], 0, sizeof ch[cnt]);
-        fa[cnt] = len[cnt] = 0;
+        fa[cnt] = len[cnt] = sz[cnt] = a[cnt] = c[cnt] = 0;
         pos[cnt] = idx;
         return cnt;
     }

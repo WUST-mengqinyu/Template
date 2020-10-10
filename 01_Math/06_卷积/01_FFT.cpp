@@ -1,7 +1,7 @@
 // maxn 至少是大于m+n的2次方数
-// m,n 1e5 maxn (1<<18)+50
-// m,n 2e5 maxn (1<<19)+50
-// m,n 1e6 maxn (1<<21)+50
+// m+n 2e5 maxn (1<<18)+50
+// m+n 4e5 maxn (1<<19)+50
+// m+n 2e6 maxn (1<<21)+50
 #define ld double
 const ld PI = acosl(-1);
 struct cplx {

@@ -9,10 +9,7 @@ struct node {
 }p[maxn * 40];
 
 void update(int l, int r, int pre, int &now, int pos) {
-    //if (now == pre) p[now=++cnt]=p[pre];
-    //p[now].val ++;
-    now = ++cnt;
-    p[now] = p[pre];
+    p[now = ++cnt] = p[pre];
     p[now].val++;
     if (l == r) {
         return;

@@ -13,13 +13,14 @@ int Gauss(int n) {
                     a[i][j] = (a[i][j] - 1LL * d * a[k][j] % mod + mod) % mod;
                 }
                 std::swap(a[i], a[k]);
-                ans = - ans;
+                ans = -ans;
             }
         }
         ans = 1LL * ans * a[i][i] % mod;
     }
     return (ans % mod + mod) % mod;
 }
+
 int main() {
     scanf("%d%d", &n, &m);
     for (int i = 1; i <= m; i++) {

@@ -1,4 +1,3 @@
-//$C_k=\sum_{i \oplus j=k} A_i B_j$
 //FWT 完后需要先模一遍
 template<typename T>
 void fwt(ll a[], int n, T f) {
@@ -24,7 +23,7 @@ void rXOR(ll& a, ll& b) {
     b = (x - y + mod) * INV2 % mod;
 }
 
-//FWT 子集卷积
+//FWT 子集卷积 i与j=0，i或j为k
 a[popcount(x)][x] = A[x]
 b[popcount(x)][x] = B[x]
 fwt(a[i]) fwt(b[i])

@@ -17,8 +17,7 @@ u64 max_clique(u64 mask, vector<u64> const &graph_matrix) { // 最大独立集�
     if (max_clique_cache.find(mask) != max_clique_cache.end())
         return max_clique_cache[mask];
     u64 a = count_trailing_zeroes(mask);
-    if (a == BITCOUNT)
-        return 0;
+    if (a == BITCOUNT) return 0;
     u64 res1 = max_clique(disable_bit(mask, a), graph_matrix);
     u64 res2 = max_clique(mask & disable_bit(graph_matrix[a], a), graph_matrix) | (1ull << a);
     u64 res = popcount(res1) > popcount(res2) ? res1 : res2;

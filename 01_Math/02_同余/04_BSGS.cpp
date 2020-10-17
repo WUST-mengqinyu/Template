@@ -1,3 +1,4 @@
+// 求 a^x = b % p
 int BSGS(int a, int b, int p) {
     map<int, int> hash;
     b %= p;

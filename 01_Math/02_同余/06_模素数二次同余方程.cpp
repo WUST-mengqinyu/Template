@@ -1,4 +1,4 @@
-// 要求模为素数，输入n, mod，返回 x^2 % mod = n，可解任意一次二元方程
+// 要求模为素数，输入n, mod，返回 x^2 % mod = n，可解任意一元二次方程
 
 bool Legendre(ll a, ll p) {
     return qp(a, p - 1 >> 1, p) == 1;

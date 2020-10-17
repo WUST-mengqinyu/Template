@@ -1,12 +1,8 @@
-const int mod = 'edit';
-const int maxn = 'edit';
-
 int x[maxn], y[maxn];
 int s1[maxn], s2[maxn], ifac[maxn];
 
 //如果x的取值是连续一段，可以做到O(n)求解
-int lagrange(int n, int *x, int *y, int xi)
-{
+int lagrange(int n, int *x, int *y, int xi) {
 	int ans = 0;
 	s1[0] = (xi - x[0]) % mod, s2[n + 1] = 1;
 	for(int i = 1; i <= n; i ++) s1[i] = 1ll * s1[i - 1] * (xi - x[i]) % mod;

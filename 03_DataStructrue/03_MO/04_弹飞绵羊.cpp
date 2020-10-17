@@ -1,3 +1,10 @@
+/*
+每个装置设定初始弹力系数ki，当绵羊达到第i个装置时，它会往后弹ki步，
+达到第i+ki个装置，若不存在第i+ki个装置，则绵羊被弹飞。
+绵羊想知道当它从第i个装置起步时，被弹几次后会被弹飞。
+为了使得游戏更有趣，Lostmonkey可以修改某个弹力装置的弹力系数，任何时候弹力系数均为正整数。
+*/
+
 int n, m;
 int belong[maxn], lpos[maxn], rpos[maxn];
 int val[maxn], nxt[maxn], k[maxn], lst[maxn];

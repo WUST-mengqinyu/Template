@@ -22,37 +22,3 @@ int LCA(int u, int v) {
 			u = fa[u][i], v = fa[v][i];
 	return fa[u][0];
 }
-
-
-// 欧拉序lca
-// pow2 = 19
-// maxn = 1 << pow2
-int st[maxn << 1][pow2 + 1], dep[maxn], euler[maxn], euler_clock， fa[maxn];
-void dfs(int u, int p) {
-    fa[u] = p;
-    dep[u] = dep[p] + 1;
-    st[++euler_clock][0] = u;
-    euler[u] = euler_clock;
-    for (const auto& v : adj0[u]) if (v != p) {
-            dfs(v, u);
-            st[++euler_clock][0] = u;
-        }
-}
-void lca_init() {
-    for (int i = 0; i != 31 - __builtin_clz(euler_clock); ++i)
-        for (int j = 1; j + (1 << (i + 1)) <= euler_clock; ++j)
-            st[j][i + 1] = upper(st[j][i], st[j + (1 << i)][i]);
-}
-inline int lca(int u, int v) {
-    if (u == v) return u;
-    u = euler[u];
-    v = euler[v];
-    if (u > v) swap(u, v);
-    int temp = 31 - __builtin_clz(++v - u);
-    return upper(st[u][temp], st[v - (1 << temp)][temp]);
-}
-
-// dfs(1, 0);
-// lca_init();
-
-// 另有树剖lca详见hld模板

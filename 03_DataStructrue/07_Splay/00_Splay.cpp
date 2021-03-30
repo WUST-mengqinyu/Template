@@ -7,24 +7,22 @@
 6. 求x的后继(后继定义为大于x，且最小的数)
 */
 
-const int maxn = 1e5+50;
-struct Splay {
-    int ch[maxn][2], fa[maxn], val[maxn], cnt[maxn], sz[maxn], tot, rt;
-    inline bool chk(int x) { return ch[fa[x]][1] == x; }
-    inline void pushup(int x) { sz[x] = sz[ch[x][0]] + sz[ch[x][1]] + cnt[x]; }
+namespace splay {
+    int son[maxn][2], fa[maxn], val[maxn], cnt[maxn], sz[maxn], tot, rt;
+    inline bool chk(int x) { return son[fa[x]][1] == x; }
+    inline void pushup(int x) { sz[x] = sz[son[x][0]] + sz[son[x][1]] + cnt[x]; }
     void rotate(int x) {
-        int y = fa[x], z = fa[y], k = chk(x), w = ch[x][k ^ 1];
-        ch[y][k] = w; fa[w] = y;
-        ch[z][chk(y)] = x, fa[x] = z;
-        ch[x][k ^ 1] = y; fa[y] = x;
+        int y = fa[x], z = fa[y], k = chk(x), w = son[x][k ^ 1];
+        son[y][k] = w, fa[w] = y;
+        son[z][chk(y)] = x, fa[x] = z;
+        son[x][k ^ 1] = y, fa[y] = x;
         pushup(y), pushup(x);
     }
     void splay(int x, int goal = 0) {
         while (fa[x] != goal) {
             int y = fa[x], z = fa[y];
             if (z != goal) {
-                if (chk(x) == chk(y)) rotate(y);
-                else rotate(x);
+                rotate(chk(x) == chk(y) ? y : x);
             }
             rotate(x);
         }
@@ -34,13 +32,13 @@ struct Splay {
         int cur = rt, p = 0;
         while (cur && val[cur] != x) {
             p = cur;
-            cur = ch[cur][x > val[cur]];
+            cur = son[cur][x > val[cur]];
         }
         if (cur) cnt[cur] ++;
         else {
             cur = ++tot;
-            if (p) ch[p][x > val[p]] = cur;
-            ch[cur][0] = ch[cur][1] = 0;
+            if (p) son[p][x > val[p]] = cur;
+            son[cur][0] = son[cur][1] = 0;
             fa[cur] = p; val[cur] = x;
             cnt[cur] = sz[cur] = 1;
         }
@@ -48,14 +46,14 @@ struct Splay {
     }
     void find(int x) {
         int cur = rt;
-        while (ch[cur][x > val[cur]] && x != val[cur]) cur = ch[cur][x > val[cur]];
+        while (son[cur][x > val[cur]] && x != val[cur]) cur = son[cur][x > val[cur]];
         splay(cur);
     }
     int kth(int k) {
         int cur = rt;
         while (1) {
-            if (ch[cur][0] && k <= sz[ch[cur][0]]) cur = ch[cur][0];
-            else if (k > sz[ch[cur][0]] + cnt[cur]) k -= sz[ch[cur][0]] + cnt[cur], cur = ch[cur][1];
+            if (son[cur][0] && k <= sz[son[cur][0]]) cur = son[cur][0];
+            else if (k > sz[son[cur][0]] + cnt[cur]) k -= sz[son[cur][0]] + cnt[cur], cur = son[cur][1];
             else break;
         }
         return cur;
@@ -63,29 +61,34 @@ struct Splay {
     int pre(int x) {
         find(x);
         if (val[rt] < x) return rt;
-        int cur = ch[rt][0];
-        while (ch[cur][1]) cur = ch[cur][1];
+        int cur = son[rt][0];
+        while (son[cur][1]) cur = son[cur][1];
         return cur;
     }
     int succ(int x) {
         find(x);
         if (val[rt] > x) return rt;
-        int cur = ch[rt][1];
-        while (ch[cur][0]) cur = ch[cur][0];
+        int cur = son[rt][1];
+        while (son[cur][0]) cur = son[cur][0];
         return cur;
     }
     void del(int x) {
         int lst = pre(x), nxt = succ(x);
         splay(lst), splay(nxt, lst);
-        int del = ch[nxt][0];
+        int del = son[nxt][0];
         if (cnt[del] > 1) cnt[del] --, splay(del);
-        else ch[nxt][0] = 0;
+        else son[nxt][0] = 0;
     }
     int getrk(int x) {
         find(x);
-        return sz[ch[rt][0]];
+        return sz[son[rt][0]];
     }
-} solve;
+    void init() {
+        rt = tot = 0;
+        son[0][0] = son[0][1] = 0;
+        fa[0] = val[0] = sz[0] = cnt[0] = 0;
+    }
+}
 
 int n;
 

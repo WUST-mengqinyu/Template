@@ -1,7 +1,7 @@
-// const int maxn = 1e5 + 10;
+// const int maxn = 1e5 + 10, maxm = 17;
 
-// 普通倍增lca
-int n, dep[maxn], fa[maxn][30];
+// 普通倍增lca, maxm是log(maxn)
+int n, dep[maxn], fa[maxn][maxm];
 vector<int> edge[maxn];
 
 void dfs(int u, int pre) {
@@ -17,7 +17,7 @@ int LCA(int u, int v) {
 	for(int i = 0; (1 << i) <= d; i ++) 
 		if((1 << i) & d) u = fa[u][i];
 	if(u == v) return u;
-	for(int i = 20; i >= 0; i --) 
+	for(int i = maxm; i >= 0; i --) 
 		if(fa[u][i] != fa[v][i]) 
 			u = fa[u][i], v = fa[v][i];
 	return fa[u][0];

@@ -1,4 +1,4 @@
-int n, a[maxn];
+int n, m, a[maxn];
 
 struct node {
     int p, t, se;

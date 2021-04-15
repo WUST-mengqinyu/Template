@@ -16,7 +16,7 @@ void build_sa(int n, int m)
         for(int i = 0; i < n; i++) if(sa[i] >= k) y[p++] = sa[i] - k;
         for(int i = 0; i < m; i++) c[i] = 0;
         for(int i = 0; i < n; i++) c[x[y[i]]]++;
-        for(int i = 0; i < m; i++) c[i] += c[i - 1];
+        for(int i = 1; i < m; i++) c[i] += c[i - 1];
         for(int i = n - 1; i >= 0; i--) sa[--c[x[y[i]]]] = y[i];
         swap(x, y);
         p = 1; x[sa[0]] = 0;

@@ -7,12 +7,6 @@ int st[maxn], idx, tot;
 int belong[maxn], scc;
 bool vis[maxn];
 
-void add(int u, int v)
-{
-	edge[u].push_back(v);
-	edge[v].push_back(u);
-}
-
 void Tarjan(int u)
 {
     dfn[u] = low[u] = ++tot;

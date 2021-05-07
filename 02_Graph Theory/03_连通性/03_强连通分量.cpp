@@ -4,7 +4,7 @@ vector<int> edge[maxn];
 
 int dfn[maxn], low[maxn];
 int st[maxn], idx, tot;
-int belong[maxn], scc;
+int bel[maxn], scc;
 bool vis[maxn];
 
 void Tarjan(int u)
@@ -20,7 +20,7 @@ void Tarjan(int u)
             Tarjan(v);
             low[u] = min(low[v], low[u]);
         }
-        else if(vis[v]) low[u] = min(low[v], dfn[u]);
+        else if(vis[v]) low[u] = min(low[u], dfn[v]);
     }
     if(dfn[u] == low[u])
     {
@@ -29,7 +29,7 @@ void Tarjan(int u)
         {
             v = st[idx--];
             vis[v] = false;
-            belong[v] = scc;
+            bel[v] = scc;
         }while(v != u);
     }
 }

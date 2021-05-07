@@ -3,8 +3,8 @@ const int maxn=1000+10;
 vector<int> edge[maxn];
 
 int dfn[maxn], low[maxn];
-int stack[maxn], index, tot;
-int belong[maxn], inde[maxn], outde[maxn], scc;
+int st[maxn], idx, tot;
+int belong[maxn], scc;
 bool vis[maxn];
 
 void add(int u, int v)
@@ -16,12 +16,11 @@ void add(int u, int v)
 void Tarjan(int u)
 {
     dfn[u] = low[u] = ++tot;
-    stack[++index] = u;
+    st[++idx] = u;
     vis[u] = true;
     int v;
-    for(int i = 0;i < edge[u].size(); i++)
+    for(v : edge[u])
     {
-        v=edge[u][i];
         if(!dfn[v])
         {
             Tarjan(v);
@@ -34,7 +33,7 @@ void Tarjan(int u)
         scc++;
         do
         {
-            v = stack[index--];
+            v = st[idx--];
             vis[v] = false;
             belong[v] = scc;
         }while(v != u);
